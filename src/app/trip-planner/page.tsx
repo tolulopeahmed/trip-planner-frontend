@@ -180,25 +180,27 @@ export default function TripPlanner() {
                 decodedPolyline.length > 0
               ) {
                 setDirections({
+                  request: {
+                    origin: new google.maps.LatLng(33.5186, -86.8104),
+                    destination: new google.maps.LatLng(32.3668, -86.3),
+                    travelMode: google.maps.TravelMode.DRIVING,
+                  },
                   routes: [
                     {
-                      overview_path: decodedPolyline
-                        .map((latLng) => {
-                          if (
-                            latLng &&
-                            typeof latLng.lat === 'function' &&
-                            typeof latLng.lng === 'function'
-                          ) {
-                            return { lat: latLng.lat(), lng: latLng.lng() };
-                          } else {
-                            console.error('Invalid LatLng object:', latLng);
-                            return null;
-                          }
-                        })
-                        .filter(Boolean), // Remove invalid values
+                      overview_path: decodedPolyline.map(
+                        (latLng) =>
+                          new google.maps.LatLng(latLng.lat(), latLng.lng())
+                      ),
+                      overview_polyline: route.polyline.encodedPolyline, // FIXED
+                      bounds: new google.maps.LatLngBounds(),
+                      copyrights: '',
+                      legs: [],
+                      warnings: [],
+                      waypoint_order: [],
+                      summary: `${tripDetails.pickupLocation} to ${tripDetails.dropoffLocation}`,
                     },
                   ],
-                });
+                } as google.maps.DirectionsResult);
               } else {
                 console.error(
                   'Decoded polyline is empty or invalid:',
