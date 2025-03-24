@@ -418,7 +418,7 @@ export default function TripPlanner() {
                             'logBookData',
                             JSON.stringify(response.data)
                           ); // ✅ Store in localStorage
-                          router.push('/logbook'); // ✅ Navigate after storing data
+                          router.push('/logBook'); // ✅ Navigate after storing data
                         }
                       } catch (error) {
                         console.error('Error fetching trip data:', error);
