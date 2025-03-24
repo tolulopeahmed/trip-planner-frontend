@@ -125,9 +125,9 @@ const LogSheet = () => {
 
         {/* Dynamic Stop Line Drawing */}
         {/* Updated Dynamic Stop Line Drawing */}
-        <div className="relative w-full h-[100px] mt-2">
+        <div className="relative w-full h-[100px] mt-2 grid grid-cols-25">
           {logData?.stops.map((stop, index) => {
-            if (index === 0) return null; // Skip first stop as there's no previous stop to connect
+            if (index === 0) return null; // Skip first stop since there's no previous one
 
             const prevStop = logData.stops[index - 1];
 
@@ -138,10 +138,10 @@ const LogSheet = () => {
               ? new Date(stop.time).getHours()
               : 0;
 
-            const prevLeft = index * 40 + 20; // Adjusting for centering
+            const prevLeft = index * 40 + 20; // Adjust centering
             const currLeft = (index + 1) * 40 + 20;
 
-            const prevTop = prevHourIndex * 12 + 10; // Align with grid
+            const prevTop = prevHourIndex * 12 + 10;
             const currTop = currHourIndex * 12 + 10;
 
             return (
@@ -162,7 +162,7 @@ const LogSheet = () => {
                 {/* Vertical Line */}
                 {prevHourIndex !== currHourIndex && (
                   <>
-                    {/* Vertical segment from previous stop downwards */}
+                    {/* Vertical segment */}
                     <div
                       className="absolute bg-black z-20"
                       style={{
@@ -173,7 +173,7 @@ const LogSheet = () => {
                       }}
                     ></div>
 
-                    {/* Horizontal segment moving to the right after changing direction */}
+                    {/* Horizontal segment after vertical move */}
                     <div
                       className="absolute bg-black z-20"
                       style={{
@@ -195,6 +195,19 @@ const LogSheet = () => {
                   }}
                   title={`${stop.location} (${stop.reason})`}
                 ></div>
+
+                {/* LAST STOP: Extend Line to the End */}
+                {index === logData.stops.length - 1 && (
+                  <div
+                    className="absolute bg-black z-20"
+                    style={{
+                      top: `${currTop}px`,
+                      left: `${currLeft}px`,
+                      width: `calc(100% - ${currLeft}px)`,
+                      height: '2px',
+                    }}
+                  ></div>
+                )}
               </React.Fragment>
             );
           })}
