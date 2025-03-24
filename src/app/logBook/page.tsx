@@ -124,11 +124,13 @@ const LogSheet = () => {
         </div>
 
         {/* Dynamic Stop Line Drawing */}
+        {/* Updated Dynamic Stop Line Drawing */}
         <div className="relative w-full h-[100px] mt-2">
           {logData?.stops.map((stop, index) => {
             if (index === 0) return null; // Skip first stop as there's no previous stop to connect
 
             const prevStop = logData.stops[index - 1];
+
             const prevHourIndex = prevStop.time
               ? new Date(prevStop.time).getHours()
               : 0;
@@ -136,35 +138,60 @@ const LogSheet = () => {
               ? new Date(stop.time).getHours()
               : 0;
 
-            const prevLeft = index * 40; // Left position based on stop index
-            const currLeft = (index + 1) * 40;
+            const prevLeft = index * 40 + 20; // Adjusting for centering
+            const currLeft = (index + 1) * 40 + 20;
 
-            const prevTop = prevHourIndex * 12; // Top position based on hour
-            const currTop = currHourIndex * 12;
+            const prevTop = prevHourIndex * 12 + 10; // Align with grid
+            const currTop = currHourIndex * 12 + 10;
 
             return (
               <React.Fragment key={index}>
-                {/* Line connecting previous stop to current stop */}
-                <div
-                  className="absolute bg-black z-20"
-                  style={{
-                    top: `${Math.min(prevTop, currTop)}px`,
-                    left: `${prevLeft}px`,
-                    width:
-                      prevTop === currTop ? `${currLeft - prevLeft}px` : '4px',
-                    height:
-                      prevTop === currTop
-                        ? '4px'
-                        : `${Math.abs(currTop - prevTop)}px`,
-                  }}
-                ></div>
+                {/* Horizontal Line */}
+                {prevHourIndex === currHourIndex && (
+                  <div
+                    className="absolute bg-black z-20"
+                    style={{
+                      top: `${prevTop}px`,
+                      left: `${prevLeft}px`,
+                      width: `${currLeft - prevLeft}px`,
+                      height: '2px',
+                    }}
+                  ></div>
+                )}
+
+                {/* Vertical Line */}
+                {prevHourIndex !== currHourIndex && (
+                  <>
+                    {/* Vertical segment from previous stop downwards */}
+                    <div
+                      className="absolute bg-black z-20"
+                      style={{
+                        top: `${Math.min(prevTop, currTop)}px`,
+                        left: `${prevLeft}px`,
+                        width: '2px',
+                        height: `${Math.abs(currTop - prevTop)}px`,
+                      }}
+                    ></div>
+
+                    {/* Horizontal segment moving to the right after changing direction */}
+                    <div
+                      className="absolute bg-black z-20"
+                      style={{
+                        top: `${currTop}px`,
+                        left: `${Math.min(prevLeft, currLeft)}px`,
+                        width: `${Math.abs(currLeft - prevLeft)}px`,
+                        height: '2px',
+                      }}
+                    ></div>
+                  </>
+                )}
 
                 {/* Stop Indicator */}
                 <div
                   className="absolute bg-red-500 rounded-full w-3 h-3 z-30"
                   style={{
-                    top: `${currTop}px`,
-                    left: `${currLeft}px`,
+                    top: `${currTop - 1}px`,
+                    left: `${currLeft - 1}px`,
                   }}
                   title={`${stop.location} (${stop.reason})`}
                 ></div>
@@ -241,24 +268,6 @@ const LogSheet = () => {
               ))}
             </div>
           </div>
-          {loading ? (
-            <div className="text-center text-gray-700 font-bold">
-              Loading...
-            </div>
-          ) : Array.isArray(logData?.stops) && logData.stops.length > 0 ? (
-            logData.stops.map((stop: Stop, index: number) => (
-              <div
-                key={index}
-                className="border border-blue-400 p-2 bg-blue-200 text-xs"
-              >
-                <strong>{stop.time}</strong> - {stop.location} ({stop.reason})
-              </div>
-            ))
-          ) : (
-            <div className="text-center text-gray-500 font-semibold">
-              No stops recorded.
-            </div>
-          )}
 
           <div
             className="grid grid-cols-25 mt-2 text-xs text-center"
@@ -320,6 +329,27 @@ const LogSheet = () => {
               ))}
             </div>
           </div> */}
+
+          {/* Remarks */}
+          {loading ? (
+            <div className="text-center text-gray-700 font-bold">
+              Loading...
+            </div>
+          ) : Array.isArray(logData?.stops) && logData.stops.length > 0 ? (
+            logData.stops.map((stop: Stop, index: number) => (
+              <div
+                key={index}
+                className="border border-blue-400 p-2 bg-blue-200 text-xs"
+              >
+                <strong>{stop.time}</strong> - {stop.location} ({stop.reason})
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500 font-semibold">
+              No stops recorded.
+            </div>
+          )}
+
           {logData?.stops?.map((stop, index) => {
             const hourIndex = stop.time ? new Date(stop.time).getHours() : 0;
             return (
