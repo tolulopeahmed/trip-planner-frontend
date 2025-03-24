@@ -98,7 +98,7 @@ export default function TripPlanner() {
 
     try {
       const response = await axios.post(
-        `https://trip-planner-app-n295.onrender.com/api/trips/`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/trips/`,
         formattedTripDetails,
         {
           headers: {
