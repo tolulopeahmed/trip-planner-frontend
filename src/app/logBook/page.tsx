@@ -125,10 +125,7 @@ const LogSheet = () => {
 
         {/* Dynamic Stop Line Drawing */}
         {/* Updated Dynamic Stop Line Drawing */}
-        <div
-          className="relative w-full h-[100px] mt-20 grid grid-cols-25"
-          style={{ marginLeft: 20 }}
-        >
+        <div className="relative w-full h-[100px] grid grid-cols-25">
           {logData?.stops.map((stop, index) => {
             if (index === 0) return null; // Skip first stop since there's no previous one
 
@@ -152,12 +149,13 @@ const LogSheet = () => {
                 {/* Horizontal Line */}
                 {prevHourIndex === currHourIndex && (
                   <div
-                    className="absolute bg-black z-20"
+                    className="absolute bg-black z-20 mt-20"
                     style={{
                       top: `${prevTop}px`,
                       left: `${prevLeft}px`,
                       width: `${currLeft - prevLeft}px`,
                       height: '2px',
+                      marginLeft: 20,
                     }}
                   ></div>
                 )}
