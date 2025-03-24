@@ -22,7 +22,7 @@ const LogSheet = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const tripResults = localStorage.getItem('tripResults');
+    const tripResults = localStorage.getItem('logBookData');
     if (tripResults) {
       setLogData(JSON.parse(tripResults));
     }
@@ -215,12 +215,12 @@ const LogSheet = () => {
             return (
               <div
                 key={index}
-                className="absolute bg-red-500 z-20"
+                className="absolute bg-black z-20"
                 style={{
                   top: `${hourIndex * 12}px`,
                   left: `${(index + 1) * 40}px`,
-                  width: '3px',
-                  height: '24px',
+                  width: '40px', // Make stop indicator wider
+                  height: '4px', // Thick line
                 }}
               ></div>
             );
