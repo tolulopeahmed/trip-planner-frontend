@@ -123,100 +123,6 @@ const LogSheet = () => {
           </div>
         </div>
 
-        {/* Dynamic Stop Line Drawing */}
-        {/* Updated Dynamic Stop Line Drawing */}
-        <div
-          className="relative w-full h-[100px] z-20 mt-20 grid grid-cols-25"
-          style={{ marginLeft: 20 }}
-        >
-          {logData?.stops.map((stop, index) => {
-            if (index === 0) return null; // Skip first stop since there's no previous one
-
-            const prevStop = logData.stops[index - 1];
-
-            const prevHourIndex = prevStop.time
-              ? new Date(prevStop.time).getHours()
-              : 0;
-            const currHourIndex = stop.time
-              ? new Date(stop.time).getHours()
-              : 0;
-
-            const prevLeft = index * 40 + 20; // Adjust centering
-            const currLeft = (index + 1) * 40 + 20;
-
-            const prevTop = prevHourIndex * 12 + 10;
-            const currTop = currHourIndex * 12 + 10;
-
-            return (
-              <React.Fragment key={index}>
-                {/* Horizontal Line */}
-                {prevHourIndex === currHourIndex && (
-                  <div
-                    className="absolute bg-black z-20 mt-20"
-                    style={{
-                      top: `${prevTop}px`,
-                      left: `${prevLeft}px`,
-                      width: `${currLeft - prevLeft}px`,
-                      height: '2px',
-                      marginLeft: 20,
-                    }}
-                  ></div>
-                )}
-
-                {/* Vertical Line */}
-                {prevHourIndex !== currHourIndex && (
-                  <>
-                    {/* Vertical segment */}
-                    <div
-                      className="absolute bg-black z-20"
-                      style={{
-                        top: `${Math.min(prevTop, currTop)}px`,
-                        left: `${prevLeft}px`,
-                        width: '2px',
-                        height: `${Math.abs(currTop - prevTop)}px`,
-                      }}
-                    ></div>
-
-                    {/* Horizontal segment after vertical move */}
-                    <div
-                      className="absolute bg-black z-20"
-                      style={{
-                        top: `${currTop}px`,
-                        left: `${Math.min(prevLeft, currLeft)}px`,
-                        width: `${Math.abs(currLeft - prevLeft)}px`,
-                        height: '2px',
-                      }}
-                    ></div>
-                  </>
-                )}
-
-                {/* Stop Indicator */}
-                <div
-                  className="absolute bg-red-500 rounded-full w-3 h-3 z-30"
-                  style={{
-                    top: `${currTop - 1}px`,
-                    left: `${currLeft - 1}px`,
-                  }}
-                  title={`${stop.location} (${stop.reason})`}
-                ></div>
-
-                {/* LAST STOP: Extend Line to the End */}
-                {index === logData.stops.length - 1 && (
-                  <div
-                    className="absolute bg-black z-20"
-                    style={{
-                      top: `${currTop}px`,
-                      left: `${currLeft}px`,
-                      width: `calc(100% - ${currLeft}px)`,
-                      height: '2px',
-                    }}
-                  ></div>
-                )}
-              </React.Fragment>
-            );
-          })}
-        </div>
-
         {/* Duty Status Grid */}
         <div className="mt-6 border-t border-b py-4 bg-blue-50 text-gray-900">
           <div className="font-bold text-center text-lg">DUTY STATUS GRID</div>
@@ -275,6 +181,98 @@ const LogSheet = () => {
                 </div>
               )
             )}
+          </div>
+          {/* Dynamic Stop Line Drawing */}
+          <div
+            className="relative w-full h-[100px] z-20 mt-20 grid grid-cols-25"
+            style={{ marginLeft: 20 }}
+          >
+            {logData?.stops.map((stop, index) => {
+              if (index === 0) return null; // Skip first stop since there's no previous one
+
+              const prevStop = logData.stops[index - 1];
+
+              const prevHourIndex = prevStop.time
+                ? new Date(prevStop.time).getHours()
+                : 0;
+              const currHourIndex = stop.time
+                ? new Date(stop.time).getHours()
+                : 0;
+
+              const prevLeft = index * 40 + 20; // Adjust centering
+              const currLeft = (index + 1) * 40 + 20;
+
+              const prevTop = prevHourIndex * 12 + 10;
+              const currTop = currHourIndex * 12 + 10;
+
+              return (
+                <React.Fragment key={index}>
+                  {/* Horizontal Line */}
+                  {prevHourIndex === currHourIndex && (
+                    <div
+                      className="absolute bg-black z-20 mt-20"
+                      style={{
+                        top: `${prevTop}px`,
+                        left: `${prevLeft}px`,
+                        width: `${currLeft - prevLeft}px`,
+                        height: '2px',
+                        marginLeft: 20,
+                      }}
+                    ></div>
+                  )}
+
+                  {/* Vertical Line */}
+                  {prevHourIndex !== currHourIndex && (
+                    <>
+                      {/* Vertical segment */}
+                      <div
+                        className="absolute bg-black z-20"
+                        style={{
+                          top: `${Math.min(prevTop, currTop)}px`,
+                          left: `${prevLeft}px`,
+                          width: '2px',
+                          height: `${Math.abs(currTop - prevTop)}px`,
+                        }}
+                      ></div>
+
+                      {/* Horizontal segment after vertical move */}
+                      <div
+                        className="absolute bg-black z-20"
+                        style={{
+                          top: `${currTop}px`,
+                          left: `${Math.min(prevLeft, currLeft)}px`,
+                          width: `${Math.abs(currLeft - prevLeft)}px`,
+                          height: '2px',
+                        }}
+                      ></div>
+                    </>
+                  )}
+
+                  {/* Stop Indicator */}
+                  <div
+                    className="absolute bg-red-500 rounded-full w-3 h-3 z-30"
+                    style={{
+                      top: `${currTop - 1}px`,
+                      left: `${currLeft - 1}px`,
+                    }}
+                    title={`${stop.location} (${stop.reason})`}
+                  ></div>
+
+                  {/* LAST STOP: Extend Line to the End */}
+                  {index === logData.stops.length - 1 && (
+                    <div
+                      className="absolute bg-black z-20"
+                      style={{
+                        top: `${currTop}px`,
+                        left: `${currLeft}px`,
+                        width: `calc(100% - ${currLeft}px)`,
+                        height: '2px',
+                      }}
+                    ></div>
+                  )}
+                </React.Fragment>
+              );
+            })}
           </div>
 
           {/* Grid Overlay to improve alignment */}
