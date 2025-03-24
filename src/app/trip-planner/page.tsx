@@ -11,6 +11,7 @@ import {
   FaSpinner,
   FaSyncAlt,
   FaCheckCircle,
+  FaBook,
 } from 'react-icons/fa';
 import { useLoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 import locations from './Locations';
@@ -245,14 +246,14 @@ export default function TripPlanner() {
         {/* Left Section: Form */}
         <div className="w-full md:w-5/12 p-8 flex flex-col">
           <button
-            onClick={() => router.back()}
+            onClick={() => router.push('/')}
             className="flex items-center gap-2 text-gray-300 hover:text-white mb-6"
           >
             <FaArrowLeft size={20} />
             <span>Back</span>
           </button>
 
-          <p className="text-3xl text-center font-bold mt-1">Plan Your Trip</p>
+          <p className="text-3xl text-center font-bold mt-1">Plan Your Trip!</p>
           <p className="text-gray-400 italic text-center mb-6">
             Enter your trip details to generate the best route.
           </p>
@@ -400,6 +401,16 @@ export default function TripPlanner() {
                     {tripResults.estimated_time}{' '}
                     <span className="text-lg">mins</span>
                   </p>
+                </div>
+
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={() => router.push('/logBook')}
+                    className="flex items-center gap-2 px-6 py-3 text-lg font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-green-700 transition"
+                  >
+                    <FaBook size={20} />
+                    View Logbook
+                  </button>
                 </div>
               </div>
             )}
