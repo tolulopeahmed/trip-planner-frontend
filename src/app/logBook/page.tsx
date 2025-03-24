@@ -185,7 +185,7 @@ const LogSheet = () => {
             {/* Dynamic Stop Line Drawing */}
             <div
               className="absolute w-full h-[100px] z-20 grid grid-cols-25"
-              style={{ marginLeft: 20, marginTop: -80 }}
+              style={{ marginLeft: 20, marginTop: -75 }}
             >
               {logData?.stops.map((stop, index) => {
                 if (index === 0) return null; // Skip first stop since there's no previous one
@@ -330,16 +330,6 @@ const LogSheet = () => {
               <div key={i} className="border border-gray-400 p-1"></div>
             ))}
           </div>
-          {/* <div className="h-24 grid grid-rows-1 border border-gray-400">
-            <div className="grid grid-cols-25  border-gray-400">
-              {Array.from({ length: 24 }).map((_, j) => (
-                <div
-                  key={j}
-                  className="border border-gray-400 p-2 bg-gray-50"
-                ></div>
-              ))}
-            </div>
-          </div> */}
 
           {/* Remarks */}
           {loading ? (
