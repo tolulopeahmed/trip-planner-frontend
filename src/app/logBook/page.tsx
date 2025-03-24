@@ -210,7 +210,7 @@ const LogSheet = () => {
                     {/* Horizontal Line */}
                     {prevHourIndex === currHourIndex && (
                       <div
-                        className="absolute bg-black z-20"
+                        className="absolute border-4 bg-black z-20"
                         style={{
                           top: `${prevTop}px`,
                           left: `${prevLeft}px`,
@@ -226,7 +226,7 @@ const LogSheet = () => {
                       <>
                         {/* Vertical segment */}
                         <div
-                          className="absolute bg-black z-20"
+                          className="absolute border-4 bg-black z-20"
                           style={{
                             top: `${Math.min(prevTop, currTop)}px`,
                             left: `${prevLeft}px`,
@@ -237,7 +237,7 @@ const LogSheet = () => {
 
                         {/* Horizontal segment after vertical move */}
                         <div
-                          className="absolute bg-black z-20"
+                          className="absolute border-4 bg-black z-20"
                           style={{
                             top: `${currTop}px`,
                             left: `${Math.min(prevLeft, currLeft)}px`,
@@ -263,11 +263,11 @@ const LogSheet = () => {
                     {/* LAST STOP: Extend Line to the End */}
                     {index === logData.stops.length - 1 && (
                       <div
-                        className="absolute bg-black z-20"
+                        className="absolute border-4 bg-black z-20"
                         style={{
                           top: `${currTop}px`,
                           left: `${currLeft}px`,
-                          width: `calc(80% - ${currLeft}px)`,
+                          width: `calc(96% - ${currLeft}px)`,
                           height: '2px',
                         }}
                       ></div>
