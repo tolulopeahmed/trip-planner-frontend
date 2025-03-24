@@ -95,6 +95,7 @@ export default function TripPlanner() {
     };
 
     console.log('Submitting Trip:', formattedTripDetails);
+    console.log('API Base URL:', process.env.NEXT_PUBLIC_API_BASE_URL);
 
     try {
       const response = await axios.post(
