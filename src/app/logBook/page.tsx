@@ -254,6 +254,8 @@ const LogSheet = () => {
                       style={{
                         top: `${currTop - 1}px`,
                         left: `${currLeft - 1}px`,
+                        marginTop: -5,
+                        marginLeft: -5,
                       }}
                       title={`${stop.location} (${stop.reason})`}
                     ></div>
@@ -265,7 +267,7 @@ const LogSheet = () => {
                         style={{
                           top: `${currTop}px`,
                           left: `${currLeft}px`,
-                          width: `calc(100% - ${currLeft}px)`,
+                          width: `calc(80% - ${currLeft}px)`,
                           height: '2px',
                         }}
                       ></div>
@@ -277,13 +279,6 @@ const LogSheet = () => {
           </div>
 
           {/* Grid Overlay to improve alignment */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="grid grid-cols-25 border-t border-gray-500 opacity-50">
-              {Array.from({ length: 25 }).map((_, i) => (
-                <div key={i} className="border-r border-gray-400 h-full"></div>
-              ))}
-            </div>
-          </div>
 
           <div
             className="grid grid-cols-25 mt-2 text-xs text-center"
