@@ -125,7 +125,10 @@ const LogSheet = () => {
 
         {/* Dynamic Stop Line Drawing */}
         {/* Updated Dynamic Stop Line Drawing */}
-        <div className="relative w-full h-[100px] grid grid-cols-25">
+        <div
+          className="relative w-full h-[100px] z-20 mt-20 grid grid-cols-25"
+          style={{ marginLeft: 20 }}
+        >
           {logData?.stops.map((stop, index) => {
             if (index === 0) return null; // Skip first stop since there's no previous one
 
