@@ -409,7 +409,7 @@ export default function TripPlanner() {
                       setLoading(true);
                       try {
                         const response = await axios.get(
-                          `${process.env.NEXT_PUBLIC_API_BASE_URL}/trips/latest`
+                          `${process.env.NEXT_PUBLIC_API_BASE_URL}/trips/latest/`
                         );
 
                         if (response.status === 200) {
