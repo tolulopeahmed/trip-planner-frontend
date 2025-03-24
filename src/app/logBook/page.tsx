@@ -18,7 +18,7 @@ const LogSheet = () => {
     stops: Stop[];
   }
 
-  const [logData, setLogData] = useState<LogData | null>(null);
+  const [logData, setLogData] = useState<LogData>({ stops: [] });
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -34,18 +34,31 @@ const LogSheet = () => {
         const storedData = localStorage.getItem('logBookData');
 
         if (storedData) {
-          console.log('Loaded from localStorage:', JSON.parse(storedData)); // ✅ Debugging log
-          setLogData(JSON.parse(storedData));
+          const parsedData = JSON.parse(storedData);
+          console.log('Loaded from localStorage:', parsedData);
+
+          // ✅ Ensure stops exist
+          if (!Array.isArray(parsedData.stops)) {
+            parsedData.stops = [];
+          }
+          setLogData(parsedData);
         } else {
-          console.log('No localStorage data, fetching from API...'); // ✅ Debugging log
+          console.log('No localStorage data, fetching from API...');
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/trips/latest`
           );
 
           if (response.status === 200) {
-            console.log('API Data:', response.data); // ✅ Debugging log
-            setLogData(response.data);
-            localStorage.setItem('logBookData', JSON.stringify(response.data)); // ✅ Store for future use
+            const fetchedData = response.data;
+
+            // ✅ Ensure stops exist
+            if (!Array.isArray(fetchedData.stops)) {
+              fetchedData.stops = [];
+            }
+
+            console.log('API Data:', fetchedData);
+            setLogData(fetchedData);
+            localStorage.setItem('logBookData', JSON.stringify(fetchedData));
           }
         }
       } catch (error) {
@@ -182,7 +195,7 @@ const LogSheet = () => {
             <div className="text-center text-gray-700 font-bold">
               Loading...
             </div>
-          ) : logData?.stops && logData.stops.length > 0 ? (
+          ) : Array.isArray(logData?.stops) && logData.stops.length > 0 ? (
             logData.stops.map((stop: Stop, index: number) => (
               <div
                 key={index}
