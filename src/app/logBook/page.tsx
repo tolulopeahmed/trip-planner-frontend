@@ -1,11 +1,62 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft } from 'react-icons/fa';
+import axios from 'axios';
 
 const LogSheet = () => {
   const router = useRouter();
+
+  interface Stop {
+    time: string;
+    location: string;
+    reason: string;
+  }
+
+  interface LogData {
+    stops: Stop[];
+  }
+
+  const [logData, setLogData] = useState<LogData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const tripResults = localStorage.getItem('tripResults');
+    if (tripResults) {
+      setLogData(JSON.parse(tripResults));
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchLogData = async () => {
+      try {
+        const storedData = localStorage.getItem('logBookData');
+
+        if (storedData) {
+          console.log('Loaded from localStorage:', JSON.parse(storedData)); // ✅ Debugging log
+          setLogData(JSON.parse(storedData));
+        } else {
+          console.log('No localStorage data, fetching from API...'); // ✅ Debugging log
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/trips/latest`
+          );
+
+          if (response.status === 200) {
+            console.log('API Data:', response.data); // ✅ Debugging log
+            setLogData(response.data);
+            localStorage.setItem('logBookData', JSON.stringify(response.data)); // ✅ Store for future use
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching log book data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLogData();
+  }, []);
 
   return (
     <main
@@ -118,6 +169,50 @@ const LogSheet = () => {
               )
             )}
           </div>
+
+          {/* Grid Overlay to improve alignment */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="grid grid-cols-25 border-t border-gray-500 opacity-50">
+              {Array.from({ length: 25 }).map((_, i) => (
+                <div key={i} className="border-r border-gray-400 h-full"></div>
+              ))}
+            </div>
+          </div>
+          {loading ? (
+            <div className="text-center text-gray-700 font-bold">
+              Loading...
+            </div>
+          ) : logData?.stops && logData.stops.length > 0 ? (
+            logData.stops.map((stop: Stop, index: number) => (
+              <div
+                key={index}
+                className="border border-blue-400 p-2 bg-blue-200 text-xs"
+              >
+                <strong>{stop.time}</strong> - {stop.location} ({stop.reason})
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500 font-semibold">
+              No stops recorded.
+            </div>
+          )}
+
+          {logData?.stops?.map((stop, index) => {
+            const hourIndex = stop.time ? new Date(stop.time).getHours() : 0;
+            return (
+              <div
+                key={index}
+                className="absolute bg-red-500 z-20"
+                style={{
+                  top: `${hourIndex * 12}px`,
+                  left: `${(index + 1) * 40}px`,
+                  width: '3px',
+                  height: '24px',
+                }}
+              ></div>
+            );
+          })}
+
           <div
             className="grid grid-cols-25 mt-2 text-xs text-center"
             style={{ marginLeft: 30 }}

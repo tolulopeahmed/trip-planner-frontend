@@ -405,12 +405,43 @@ export default function TripPlanner() {
 
                 <div className="flex justify-center mt-4">
                   <button
-                    onClick={() => router.push('/logBook')}
-                    className="flex items-center gap-2 px-6 py-3 text-lg font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-green-700 transition"
+                    onClick={async () => {
+                      setLoading(true);
+                      try {
+                        const response = await axios.get(
+                          `${process.env.NEXT_PUBLIC_API_BASE_URL}/trips/latest`
+                        );
+
+                        if (response.status === 200) {
+                          console.log('Trip Data:', response.data);
+                          localStorage.setItem(
+                            'logBookData',
+                            JSON.stringify(response.data)
+                          ); // ✅ Store in localStorage
+                          router.push('/logbook'); // ✅ Navigate after storing data
+                        }
+                      } catch (error) {
+                        console.error('Error fetching trip data:', error);
+                      }
+                      setLoading(false);
+                    }}
+                    className="flex items-center justify-center gap-3 px-8 py-4 text-lg font-semibold uppercase rounded-lg shadow-lg bg-green-500 hover:bg-green-600 active:scale-95 transition-all duration-200 ease-in-out"
                   >
-                    <FaBook size={20} />
-                    View Logbook
+                    {loading ? (
+                      <>
+                        <FaSpinner
+                          className="animate-spin text-white"
+                          size={24}
+                        />{' '}
+                        Loading...
+                      </>
+                    ) : (
+                      <>
+                        <FaBook size={22} /> View Log Book
+                      </>
+                    )}
                   </button>
+                  ;
                 </div>
               </div>
             )}
