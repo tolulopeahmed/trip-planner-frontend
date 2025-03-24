@@ -123,6 +123,56 @@ const LogSheet = () => {
           </div>
         </div>
 
+        {/* Dynamic Stop Line Drawing */}
+        <div className="relative w-full h-[100px] mt-2">
+          {logData?.stops.map((stop, index) => {
+            if (index === 0) return null; // Skip first stop as there's no previous stop to connect
+
+            const prevStop = logData.stops[index - 1];
+            const prevHourIndex = prevStop.time
+              ? new Date(prevStop.time).getHours()
+              : 0;
+            const currHourIndex = stop.time
+              ? new Date(stop.time).getHours()
+              : 0;
+
+            const prevLeft = index * 40; // Left position based on stop index
+            const currLeft = (index + 1) * 40;
+
+            const prevTop = prevHourIndex * 12; // Top position based on hour
+            const currTop = currHourIndex * 12;
+
+            return (
+              <React.Fragment key={index}>
+                {/* Line connecting previous stop to current stop */}
+                <div
+                  className="absolute bg-black z-20"
+                  style={{
+                    top: `${Math.min(prevTop, currTop)}px`,
+                    left: `${prevLeft}px`,
+                    width:
+                      prevTop === currTop ? `${currLeft - prevLeft}px` : '4px',
+                    height:
+                      prevTop === currTop
+                        ? '4px'
+                        : `${Math.abs(currTop - prevTop)}px`,
+                  }}
+                ></div>
+
+                {/* Stop Indicator */}
+                <div
+                  className="absolute bg-red-500 rounded-full w-3 h-3 z-30"
+                  style={{
+                    top: `${currTop}px`,
+                    left: `${currLeft}px`,
+                  }}
+                  title={`${stop.location} (${stop.reason})`}
+                ></div>
+              </React.Fragment>
+            );
+          })}
+        </div>
+
         {/* Duty Status Grid */}
         <div className="mt-6 border-t border-b py-4 bg-blue-50 text-gray-900">
           <div className="font-bold text-center text-lg">DUTY STATUS GRID</div>
@@ -210,22 +260,6 @@ const LogSheet = () => {
             </div>
           )}
 
-          {logData?.stops?.map((stop, index) => {
-            const hourIndex = stop.time ? new Date(stop.time).getHours() : 0;
-            return (
-              <div
-                key={index}
-                className="absolute bg-black z-20"
-                style={{
-                  top: `${hourIndex * 12}px`,
-                  left: `${(index + 1) * 40}px`,
-                  width: '40px', // Make stop indicator wider
-                  height: '4px', // Thick line
-                }}
-              ></div>
-            );
-          })}
-
           <div
             className="grid grid-cols-25 mt-2 text-xs text-center"
             style={{ marginLeft: 30 }}
@@ -276,7 +310,7 @@ const LogSheet = () => {
               <div key={i} className="border border-gray-400 p-1"></div>
             ))}
           </div>
-          <div className="h-24 grid grid-rows-1 border border-gray-400">
+          {/* <div className="h-24 grid grid-rows-1 border border-gray-400">
             <div className="grid grid-cols-25  border-gray-400">
               {Array.from({ length: 24 }).map((_, j) => (
                 <div
@@ -285,7 +319,22 @@ const LogSheet = () => {
                 ></div>
               ))}
             </div>
-          </div>
+          </div> */}
+          {logData?.stops?.map((stop, index) => {
+            const hourIndex = stop.time ? new Date(stop.time).getHours() : 0;
+            return (
+              <div
+                key={index}
+                className="absolute bg-black z-20"
+                style={{
+                  top: `${hourIndex * 12}px`,
+                  left: `${(index + 1) * 40}px`,
+                  width: '40px', // Make stop indicator wider
+                  height: '4px', // Thick line
+                }}
+              ></div>
+            );
+          })}
         </div>
 
         {/* Shipper and Load Info */}
